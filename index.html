@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 1 Go Home 家 - 互動練習</title>
+<style>
+  :root{
+    --pink:#ec5f7a;
+    --pink-light:#fbdbe0;
+    --blue:#2f7fd1;
+    --blue-light:#dcecfb;
+    --yellow:#fff2a8;
+    --purple:#8f6fc9;
+    --teal:#3aa9a0;
+    --ink:#2c2c34;
+    --bg:#faf7f2;
+    --card:#ffffff;
+    --border:#eee0d8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Noto Sans TC","Segoe UI",Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    padding-bottom:60px;
+  }
+  header.hero{
+    background:linear-gradient(135deg,var(--pink),#f7929f);
+    color:#fff;
+    padding:22px 16px 60px;
+    text-align:center;
+    position:relative;
+    border-radius:0 0 30px 30px;
+  }
+  header.hero .unit-badge{
+    display:inline-block;
+    background:#fff;
+    color:var(--pink);
+    font-weight:800;
+    border-radius:50%;
+    width:56px;height:56px;
+    line-height:56px;
+    font-size:12px;
+    margin-bottom:8px;
+  }
+  header.hero h1{
+    margin:4px 0 0;
+    font-size:26px;
+  }
+  nav.tabs{
+    position:sticky;
+    top:0;
+    z-index:50;
+    display:flex;
+    overflow-x:auto;
+    gap:6px;
+    background:var(--bg);
+    padding:10px 10px 6px;
+    margin-top:-40px;
+    max-width:900px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  nav.tabs button{
+    flex:0 0 auto;
+    border:none;
+    background:#fff;
+    color:var(--ink);
+    padding:10px 16px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+    white-space:nowrap;
+  }
+  nav.tabs button.active{
+    background:var(--pink);
+    color:#fff;
+  }
+  main{
+    max-width:900px;
+    margin:0 auto;
+    padding:10px 14px 40px;
+  }
+  section.page{
+    display:none;
+  }
+  section.page.active{
+    display:block;
+  }
+  .section-title{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--purple);
+    color:#fff;
+    padding:6px 16px;
+    border-radius:16px;
+    font-weight:700;
+    font-size:14px;
+    margin:18px 0 12px;
+  }
+  .section-title.pink{background:var(--pink);}
+  .section-title.blue{background:var(--blue);}
+  .section-title.teal{background:var(--teal);}
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.03);
+  }
+  .line{
+    display:flex;
+    gap:10px;
+    margin-bottom:14px;
+    align-items:flex-start;
+  }
+  .line:last-child{margin-bottom:0;}
+  .speaker-tag{
+    flex:0 0 30px;
+    height:30px;
+    width:30px;
+    border-radius:50%;
+    color:#fff;
+    font-weight:800;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+  }
+  .speaker-tag.A{background:var(--blue);}
+  .speaker-tag.B{background:var(--pink);}
+  .line-content{flex:1;}
+  .en-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .en-text{
+    font-size:16px;
+    line-height:1.5;
+  }
+  .zh-text{
+    color:#777;
+    font-size:14px;
+    margin-top:3px;
+  }
+  .highlight{
+    background:var(--yellow);
+    padding:0 2px;
+    border-radius:3px;
+  }
+  button.spk{
+    border:none;
+    background:var(--blue-light);
+    color:var(--blue);
+    width:28px;height:28px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:14px;
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform .1s;
+  }
+  button.spk:hover{transform:scale(1.1);}
+  button.spk.playing{background:var(--pink);color:#fff;}
+  .sentence-row{
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+    padding:10px 0;
+    border-bottom:1px dashed var(--border);
+  }
+  .sentence-row:last-child{border-bottom:none;}
+  .sub-box{
+    background:var(--blue-light);
+    border-radius:14px;
+    padding:14px;
+    margin-top:10px;
+  }
+  .sub-box h4{margin:0 0 10px;color:var(--blue);font-size:14px;}
+  .chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+  .chip{
+    background:#fff;
+    border:1px solid var(--blue);
+    color:var(--blue);
+    border-radius:10px;
+    padding:8px 10px;
+    font-size:13px;
+    text-align:center;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:4px;
+  }
+  .template{font-size:14px;color:#555;}
+  .vocab-cat-title{
+    font-weight:800;
+    color:var(--pink);
+    font-size:16px;
+    margin:20px 0 10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .vocab-cat-title .num{
+    background:var(--pink);
+    color:#fff;
+    width:24px;height:24px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+  }
+  .vocab-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:8px;
+  }
+  .vocab-item{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+  }
+  .vocab-word-block .word{font-weight:700;}
+  .vocab-word-block .ipa{color:#999;font-size:12px;margin-left:4px;}
+  .vocab-word-block .zh{color:#555;font-size:13px;}
+  .qa-card{
+    background:linear-gradient(135deg,#fdeef1,#fff);
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:12px;
+    border:1px solid var(--pink-light);
+  }
+  .qa-label{color:var(--pink);font-weight:800;font-size:13px;margin-bottom:6px;}
+  .idiom-card{
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:12px;
+    background:#fff;
+    border:1px solid var(--border);
+  }
+  .idiom-phrase{
+    font-weight:800;
+    color:var(--purple);
+    font-size:16px;
+  }
+  .idiom-zh{
+    display:inline-block;
+    background:var(--purple);
+    color:#fff;
+    font-size:12px;
+    padding:2px 8px;
+    border-radius:10px;
+    margin-left:8px;
+  }
+  .addvocab-item{margin-bottom:12px;}
+  .addvocab-head{display:flex;align-items:center;gap:6px;font-weight:700;}
+  .pos{color:#999;font-size:12px;font-weight:400;}
+  .voice-note{
+    font-size:12px;
+    color:#999;
+    text-align:center;
+    margin:20px 0 0;
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="unit-badge">Unit<br>1</div>
+  <h1>Go Home 家</h1>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button data-tab="conv" class="active">日常對話</button>
+  <button data-tab="sentences">超高頻率句</button>
+  <button data-tab="vocab">日常單字</button>
+  <button data-tab="qa">Q&amp;A</button>
+  <button data-tab="idioms">諺語慣用語</button>
+</nav>
+
+<main>
+
+  <!-- ============ Daily Conversation ============ -->
+  <section class="page active" id="page-conv">
+    <span class="section-title pink">Daily Conversation 日常對話</span>
+    <div class="card" id="conv-list"></div>
+
+    <span class="section-title blue">補充單字 & 片語</span>
+    <div class="card" id="conv-addvocab"></div>
+  </section>
+
+  <!-- ============ Daily Sentences ============ -->
+  <section class="page" id="page-sentences">
+    <span class="section-title pink">Daily Sentences 超高頻率使用句</span>
+    <div class="card" id="sentence-list"></div>
+
+    <span class="section-title blue">換個單字說說看</span>
+    <div class="card">
+      <div class="sub-box" id="sub-box-1"></div>
+      <div class="sub-box" id="sub-box-2" style="margin-top:14px;"></div>
+    </div>
+
+    <span class="section-title teal">補充單字 & 片語</span>
+    <div class="card" id="sentence-addvocab"></div>
+  </section>
+
+  <!-- ============ Daily Vocabulary ============ -->
+  <section class="page" id="page-vocab">
+    <span class="section-title pink">Daily Vocabulary 語言學校都會教的超實用日常單字</span>
+    <div id="vocab-list"></div>
+  </section>
+
+  <!-- ============ Daily Q&A ============ -->
+  <section class="page" id="page-qa">
+    <span class="section-title pink">Daily Q&amp;A</span>
+    <div id="qa-list"></div>
+  </section>
+
+  <!-- ============ Proverbs & Idioms ============ -->
+  <section class="page" id="page-idioms">
+    <span class="section-title pink">Proverbs &amp; Idioms 道地諺語與慣用語</span>
+    <div id="idioms-list"></div>
+  </section>
+
+  <p class="voice-note">🔊 使用瀏覽器內建語音朗讀（Web Speech API）。若無聲音，請確認裝置音量或改用 Chrome / Safari 瀏覽器。</p>
+</main>
+
+<script>
+/* ---------------- DATA ---------------- */
+
+const conversation = [
+  {sp:'A', en:"Welcome to my home. I just moved into this apartment a month ago.", zh:"歡迎來我家。我一個月前才剛搬進這間公寓。"},
+  {sp:'B', en:"Wow. Congratulations. No wonder everything looks brand new in your house.", zh:"哇，恭喜！難怪你的房子裡，所有的東西看起來都超新的。", hl:["No wonder","brand new"]},
+  {sp:'A', en:"Yes. I spent a lot of time thinking how to make it the coziest place in the world.", zh:"是啊，我花了好多的時間想要如何讓它變成世界上最溫馨的地方。", hl:["coziest"]},
+  {sp:'B', en:"It does look like you have what you want.", zh:"看起來你真的擁有你想要的。"},
+  {sp:'A', en:"Are you hungry? I prepared some cookies in the oven. Would you like to have some?", zh:"你餓了嗎？我有準備一些餅乾在烤箱裡。你想吃一些嗎？"},
+  {sp:'B', en:"Sure. Can I also have a cup of hot coffee? Coffee and cookies are the perfect match.", zh:"當然，我可以來一杯熱咖啡嗎？咖啡和餅乾是完美的組合。", hl:["perfect match"]},
+  {sp:'A', en:"No problem. Hold on a second.", zh:"沒問題，等一下。"},
+];
+
+const convAddVocab = [
+  {word:"no wonder", pos:"ph", zh:"難怪", ex_en:"Carrie had a terrible cold last week. No wonder she didn't come to our party.", ex_zh:"上星期卡蘿得了重感冒，難怪她沒有來我們的派對。"},
+  {word:"brand new", pos:"ph", zh:"全新、嶄新的", ex_en:"My parents moved into a brand new house last week.", ex_zh:"我的父母上星期搬進了一間全新的房子。"},
+  {word:"cozy", pos:"a", zh:"舒適的、愜意的、舒服的 (cozy-cozier-coziest)", ex_en:"The blanket is warm and cozy.", ex_zh:"毯子蓋起來又溫暖又舒服。"},
+  {word:"perfect match", pos:"ph", zh:"完美組合", ex_en:"Do you think John and Lily are perfect match?", ex_zh:"你覺得約翰和莉是完美組合嗎？"},
+];
+
+const sentences = [
+  {en:"I still need to buy a new washing machine.", zh:"我還需要買一台新的洗衣機。", hl:["washing machine"]},
+  {en:"I love big living rooms. I think a living room is a place where you can enjoy your time with friends and family.", zh:"我喜歡大客廳。我認為客廳是你可以和朋友、家人一起享受時光的地方。"},
+  {en:"Lying casually on the sofa and watching TV with friends and family are the most enjoyable things after finishing a tiring day.", zh:"輕鬆的倒在沙發上和朋友、家人一起看電視，是累人的一天結束後最享受的事情。", hl:["casually"]},
+  {en:"I love watching some DVDs on my bed.", zh:"我喜歡在床上看一些DVD。"},
+  {en:"LCD TVs are much cheaper than Plasma TVs.", zh:"液晶電視比電漿電視便宜很多。"},
+  {en:"We ran out of light bulbs. Can you run errands to buy them?", zh:"我們用完燈泡了，你可以替我跑腿買新的嗎？", hl:["light bulbs","run errands"]},
+  {en:"Don't be like a couch potato sitting on the sofa and doing nothing but eating and watching TV.", zh:"不要像一個沙發馬鈴薯坐在沙發上什麼都不做，只有吃和看電視。"},
+  {en:"The refrigerator is empty. Let's go to the supermarket to do some grocery shopping.", zh:"冰箱空了，我們去超市買一些吃的食物吧。"},
+  {en:"You can wash your dishes in a dishwasher. What you need to do is turn on the machine, put some detergent in and press the start button.", zh:"你可以用洗碗機洗碗，你需要做的就是打開機器，放一些洗碗精和按下開始鍵就可以了。", hl:["detergent","press"]},
+];
+
+const sub1 = {
+  label:"washing machine 可以替換：",
+  chips:[["dryer","烘乾機"],["air conditioner","冷氣機"],["dish washer","洗碗機"]],
+  template:"I still need to buy a new ___.",
+  template_zh:"我還需要買一台新的___。"
+};
+const sub2 = {
+  label:"light bulbs 可以替換：",
+  chips:[["toilet paper","衛生紙"],["shampoo","洗髮精"],["garbage bag","垃圾袋"]],
+  template:"We are out of ___.",
+  template_zh:"我們___用完了。"
+};
+
+const sentenceAddVocab = [
+  {word:"casually", pos:"ad", zh:"輕鬆地、偶然地", ex_en:"Mom and dad walked casually along the beach.", ex_zh:"爸媽輕鬆地沿著海岸散步。"},
+  {word:"run errands", pos:"ph", zh:"跑腿、為某人辦事", ex_en:"Cindy ran errands for the boss.", ex_zh:"辛蒂替老闆跑腿去了。"},
+  {word:"detergent", pos:"n", zh:"洗潔劑", ex_en:"I need to buy some detergent.", ex_zh:"我得買些洗潔劑。"},
+  {word:"press", pos:"v", zh:"按、壓", ex_en:"You need to press this button to start the computer.", ex_zh:"你需要按這顆按鈕開機電腦。"},
+];
+
+const vocabCategories = [
+  {title:"living room", zh:"客廳", words:[
+    ["television","ˈtɛlə,vɪʒən","電視"],
+    ["sofa","ˈsofə","沙發"],
+    ["chair","tʃɛr","椅子"],
+    ["table","ˈtebl","桌子"],
+    ["window","ˈwɪndo","窗戶"],
+    ["light","laɪt","日光燈"],
+  ]},
+  {title:"bedroom", zh:"臥室；寢室", words:[
+    ["single bed","","單人床"],
+    ["double bed","","雙人床"],
+    ["blanket","ˈblæŋkɪt","毯子"],
+    ["pillow","ˈpɪlo","枕頭"],
+    ["sheet","ʃit","床單"],
+    ["dressing table","","梳妝台"],
+    ["bedside lamp","","床頭燈"],
+  ]},
+  {title:"bathroom", zh:"浴室", words:[
+    ["toilet / restroom","ˈtɔɪlɪt","（有沖洗式馬桶的）廁所；洗手間；盥洗室"],
+    ["bathtub","ˈbæθ,tʌb","浴缸"],
+    ["shower nozzle","","蓮蓬頭"],
+    ["mirror","ˈmɪrə","鏡子"],
+    ["toilet","ˈtɔɪlɪt","馬桶"],
+    ["faucet","ˈfɔsɪt","水龍頭"],
+    ["sink","sɪŋk","洗手台"],
+  ]},
+  {title:"kitchen", zh:"廚房", words:[
+    ["stove","stov","瓦斯爐"],
+    ["refrigerator","rɪˈfrɪdʒə,retə","冰箱"],
+    ["oven","ˈʌvən","烤箱"],
+    ["cooker","ˈkukə","炊具；烹調器具"],
+    ["turner","ˈtɜnə","鍋鏟"],
+    ["pan","pæn","平底鍋"],
+    ["pot","pɑt","鍋；罐；壺"],
+    ["chopping board","","砧板"],
+    ["hot water dispenser","","熱水機"],
+    ["toaster","ˈtostə","烤麵包機"],
+    ["microwave","ˈmaɪkro,wev","微波爐"],
+  ]},
+  {title:"housewares", zh:"家庭用品", words:[
+    ["bowl","bol","碗"],
+    ["chopsticks","ˈtʃɑp,stɪks","筷子"],
+    ["spoon","spun","湯匙"],
+    ["cup","kʌp","杯子"],
+    ["dish / plate","dɪʃ / plet","盤子"],
+    ["kettle","ˈkɛtl","水壺"],
+  ]},
+  {title:"storage", zh:"儲藏室", words:[
+    ["broom","brum","掃把"],
+    ["dustpan","ˈdʌst,pæn","畚斗"],
+    ["lawnmower","ˈlɔn,moə","割草機"],
+    ["mop","mɑp","拖把"],
+    ["trash can","","垃圾桶"],
+    ["vacuum cleaner","","吸塵器"],
+  ]},
+  {title:"yard", zh:"院子", words:[
+    ["barbecue","ˈbɑrbɪ,kju","烤肉架"],
+    ["doghouse","ˈdɔg,haus","狗屋"],
+    ["fence","fɛns","圍籬"],
+    ["garden","ˈgɑrdn","花園"],
+    ["greenhouse","ˈgrin,haus","溫室"],
+    ["patio","ˈpæti,o","露臺"],
+  ]},
+  {title:"library", zh:"圖書室", words:[
+    ["lamp","læmp","檯燈"],
+    ["carpet","ˈkɑrpɪt","地毯"],
+    ["fireplace","ˈfaɪr,ples","壁爐"],
+    ["bookshelf","ˈbuk,ʃɛlf","書櫃"],
+    ["blinds","blaɪndz","百葉窗"],
+    ["ceiling","ˈsilɪŋ","天花板"],
+    ["doorknob","ˈdor,nɑb","門把"],
+    ["recreation room","","遊戲室"],
+    ["light switch","","電燈開關"],
+    ["floor mat","","地墊"],
+  ]},
+];
+
+const qaList = [
+  {q_en:"Do you use microwave to cook food?", q_zh:"你會用微波爐煮菜嗎？", a_en:"Yes, I usually use it to heat some food.", a_zh:"會啊，我通常用它來熱食物。"},
+  {q_en:"How many bedrooms do you have?", q_zh:"你有幾間房間啊？", a_en:"There are three bedrooms.", a_zh:"總共三間。"},
+  {q_en:"Where do you put your earrings?", q_zh:"你把耳環放在哪裡？", a_en:"I think I put them on the dressing table.", a_zh:"我想我把它們放在化妝台上。"},
+];
+
+const idioms = [
+  {phrase:"be home and dry", zh:"成功的完成某事", ex_en:"I've just got one more report to finish and I will be home and dry.", ex_zh:"我還有一個報告要完成。我會成功的完成它。"},
+  {phrase:"make oneself at home", zh:"把自己當作像在家一般", ex_en:"Welcome to my home. Please make yourself at home.", ex_zh:"歡迎來到我家，當成自己家一樣吧。"},
+  {phrase:"hit a home run", zh:"在某方面成功", ex_en:"Our performance last night was the best we had ever given. We felt our group hit a home run.", ex_zh:"昨晚的表演是我們目前為止最好的表演。我覺得我們團在這方面是成功的。"},
+  {phrase:"until the cows come home", zh:"花很長的時間", ex_en:"We can talk about the problem until the cows come home but it still wouldn't solve anything.", ex_zh:"我們可以花很長的時間討論那個問題，但是那沒有幫助。"},
+  {phrase:"home is where the heart is", zh:"心在哪裡家就在哪裡", ex_en:"I don't mind traveling around all the time because home is where the heart is.", ex_zh:"我不介意到處旅行，因為心在哪裡，家就在哪裡。"},
+  {phrase:"the longest way round is the shortest way home", zh:"欲速則不達", ex_en:"You had better read the instructions before trying to use your new cellphone. It may take some time, but the longest way round is the nearest way home.", ex_zh:"你最好在你使用新手機前先閱讀說明書。這可能會花一些時間但是欲速則不達。"},
+  {phrase:"Charity begins at home.", zh:"行善始於近親", ex_en:"If you really want to make the world a better place, you can start by being kind to your family and friends. Charity begins at home.", ex_zh:"如果你真的想要讓世界變成更好的地方，那麼你可以先從善待你的家人和朋友開始。行善始於近親。"},
+  {phrase:"East or west, home is best.", zh:"天崖海角，自家最好。", ex_en:"You may think that traveling all the time is fun, but eventually you'll discover that east or west, home is best.", ex_zh:"你可能覺得旅行很有趣，但是最終你會發現天崖海角，自家最好。"},
+];
+
+/* ---------------- SPEECH ---------------- */
+
+let currentBtn = null;
+function speak(text, btn){
+  if(!('speechSynthesis' in window)){
+    alert('您的瀏覽器不支援語音朗讀功能');
+    return;
+  }
+  const synth = window.speechSynthesis;
+  synth.cancel();
+  if(currentBtn) currentBtn.classList.remove('playing');
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = 0.92;
+  if(btn){
+    btn.classList.add('playing');
+    currentBtn = btn;
+    utter.onend = () => btn.classList.remove('playing');
+    utter.onerror = () => btn.classList.remove('playing');
+  }
+  // Chrome sometimes silently drops an utterance if speak() is called
+  // in the same tick as cancel(); a tiny delay makes playback reliable.
+  setTimeout(() => synth.speak(utter), 40);
+}
+
+// Sentences/words are stored here and referenced by index from the button's
+// data-speak-id attribute, instead of being written into an onclick='...'
+// attribute. This avoids breaking on sentences containing apostrophes
+// (e.g. "Don't", "Let's", "I've") which previously terminated the
+// single-quoted attribute early and silently broke that button.
+const speakRegistry = [];
+function spkBtn(text){
+  const id = speakRegistry.length;
+  speakRegistry.push(text);
+  return `<button class="spk" data-speak-id="${id}" aria-label="播放發音">🔊</button>`;
+}
+
+document.addEventListener('click', e=>{
+  const btn = e.target.closest('button.spk');
+  if(btn){
+    const t = speakRegistry[Number(btn.dataset.speakId)];
+    if(t !== undefined) speak(t, btn);
+    return;
+  }
+  const chip = e.target.closest('.chip[data-speak-id]');
+  if(chip){
+    const t = speakRegistry[Number(chip.dataset.speakId)];
+    if(t !== undefined) speak(t, null);
+  }
+});
+
+function withHighlights(text, hl){
+  if(!hl || !hl.length) return text;
+  let out = text;
+  hl.forEach(h=>{
+    out = out.replace(h, `<span class="highlight">${h}</span>`);
+  });
+  return out;
+}
+
+/* ---------------- RENDER ---------------- */
+
+function renderConversation(){
+  const el = document.getElementById('conv-list');
+  el.innerHTML = conversation.map(l => `
+    <div class="line">
+      <div class="speaker-tag ${l.sp}">${l.sp}</div>
+      <div class="line-content">
+        <div class="en-row">
+          <span class="en-text">${withHighlights(l.en, l.hl)}</span>
+          ${spkBtn(l.en)}
+        </div>
+        <div class="zh-text">${l.zh}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('conv-addvocab').innerHTML = renderAddVocab(convAddVocab);
+}
+
+function renderAddVocab(list){
+  return list.map(v => `
+    <div class="addvocab-item">
+      <div class="addvocab-head">
+        <span>${v.word}</span><span class="pos">(${v.pos})</span>
+        <span class="zh-text" style="margin:0;">${v.zh}</span>
+        ${spkBtn(v.word)}
+      </div>
+      <div class="sentence-row" style="border:none;padding-top:4px;">
+        <div style="flex:1;">
+          <div class="en-text" style="font-size:14px;">${v.ex_en}</div>
+          <div class="zh-text">${v.ex_zh}</div>
+        </div>
+        ${spkBtn(v.ex_en)}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderSentences(){
+  const el = document.getElementById('sentence-list');
+  el.innerHTML = sentences.map(s => `
+    <div class="sentence-row">
+      <div style="flex:1;">
+        <div class="en-text">${withHighlights(s.en, s.hl)}</div>
+        <div class="zh-text">${s.zh}</div>
+      </div>
+      ${spkBtn(s.en)}
+    </div>
+  `).join('');
+
+  document.getElementById('sub-box-1').innerHTML = renderSub(sub1);
+  document.getElementById('sub-box-2').innerHTML = renderSub(sub2);
+
+  document.getElementById('sentence-addvocab').innerHTML = renderAddVocab(sentenceAddVocab);
+}
+
+function renderSub(sub){
+  return `
+    <h4>${sub.label}</h4>
+    <div class="chip-row">
+      ${sub.chips.map(c => {
+        const id = speakRegistry.length;
+        speakRegistry.push(c[0]);
+        return `<div class="chip" data-speak-id="${id}">${c[0]}<br><span style="font-size:11px;color:#888;">${c[1]}</span></div>`;
+      }).join('')}
+    </div>
+    <div class="template">${sub.template}<br><span style="color:#999;">${sub.template_zh}</span></div>
+  `;
+}
+
+function renderVocab(){
+  const el = document.getElementById('vocab-list');
+  el.innerHTML = vocabCategories.map((cat, i) => `
+    <div class="vocab-cat-title"><span class="num">${i+1}</span>${cat.title} ${cat.zh}</div>
+    <div class="vocab-grid">
+      ${cat.words.map(w => `
+        <div class="vocab-item">
+          <div class="vocab-word-block">
+            <span class="word">${w[0]}</span>
+            ${w[1] ? `<span class="ipa">[${w[1]}]</span>` : ''}
+            <div class="zh">${w[2]}</div>
+          </div>
+          ${spkBtn(w[0].split(' / ')[0].split(' ')[0] === w[0] ? w[0] : w[0])}
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function renderQA(){
+  const el = document.getElementById('qa-list');
+  el.innerHTML = qaList.map((qa, i) => `
+    <div class="qa-card">
+      <div class="qa-label">會話${['一','二','三','四','五'][i] || (i+1)}</div>
+      <div class="en-row">
+        <span class="en-text"><b>Q</b>&nbsp;${qa.q_en}</span>
+        ${spkBtn(qa.q_en)}
+      </div>
+      <div class="zh-text" style="margin-bottom:8px;">${qa.q_zh}</div>
+      <div class="en-row">
+        <span class="en-text" style="color:var(--pink);"><b>A</b>&nbsp;${qa.a_en}</span>
+        ${spkBtn(qa.a_en)}
+      </div>
+      <div class="zh-text">${qa.a_zh}</div>
+    </div>
+  `).join('');
+}
+
+function renderIdioms(){
+  const el = document.getElementById('idioms-list');
+  el.innerHTML = idioms.map(id => `
+    <div class="idiom-card">
+      <div class="en-row">
+        <span class="idiom-phrase">${id.phrase}</span>
+        <span class="idiom-zh">${id.zh}</span>
+        ${spkBtn(id.phrase)}
+      </div>
+      <div class="sentence-row" style="border:none;padding-top:8px;">
+        <div style="flex:1;">
+          <div class="en-text" style="font-size:14px;">${withHighlights(id.ex_en,[id.phrase])}</div>
+          <div class="zh-text">${id.ex_zh}</div>
+        </div>
+        ${spkBtn(id.ex_en)}
+      </div>
+    </div>
+  `).join('');
+}
+
+renderConversation();
+renderSentences();
+renderVocab();
+renderQA();
+renderIdioms();
+
+/* ---------------- TABS ---------------- */
+
+document.getElementById('tabs').addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  window.speechSynthesis.cancel();
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('section.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-' + btn.dataset.tab).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+</script>
+
+</body>
+</html>
