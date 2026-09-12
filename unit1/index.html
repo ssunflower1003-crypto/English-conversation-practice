@@ -2,7 +2,10 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#ec5f7a">
 <title>Unit 1 Go Home 家 - 互動練習</title>
 <style>
   :root{
@@ -51,7 +54,7 @@
   }
   nav.tabs{
     position:sticky;
-    top:0;
+    top:42px;
     z-index:50;
     display:flex;
     overflow-x:auto;
@@ -277,9 +280,73 @@
     text-align:center;
     margin:20px 0 0;
   }
+
+  /* ---------- Responsive: tablets ---------- */
+  @media (max-width:768px){
+    main{padding:10px 12px 40px;}
+    .vocab-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+  }
+
+  /* ---------- Responsive: phones ---------- */
+  @media (max-width:480px){
+    header.hero{padding:18px 12px 54px;}
+    header.hero h1{font-size:21px;}
+    header.hero .unit-badge{width:46px;height:46px;line-height:46px;font-size:11px;}
+    nav.tabs{margin-top:-34px;padding:8px 8px 6px;gap:5px;}
+    nav.tabs button{padding:8px 12px;font-size:13px;}
+    main{padding:8px 10px 32px;}
+    .section-title{font-size:13px;padding:5px 13px;margin:14px 0 10px;}
+    .card{padding:12px;border-radius:14px;}
+    .en-text{font-size:14.5px;}
+    .zh-text{font-size:13px;}
+    .line{gap:8px;}
+    .speaker-tag{width:26px;height:26px;font-size:12px;flex-basis:26px;}
+    button.spk{width:32px;height:32px;font-size:15px;}
+    .vocab-grid{grid-template-columns:1fr 1fr;gap:6px;}
+    .vocab-item{padding:8px 10px;}
+    .vocab-word-block .word{font-size:14px;}
+    .qa-card,.idiom-card{padding:12px;}
+    .idiom-phrase{font-size:14.5px;}
+    .idiom-zh{font-size:11px;}
+    .chip{font-size:12px;padding:7px 8px;}
+    .sub-box{padding:12px;}
+  }
+
+  @media (max-width:360px){
+    .vocab-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- Unit switcher bar ---------- */
+  .unit-switch{
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    padding:10px 12px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    position:sticky;
+    top:0;
+    z-index:60;
+  }
+  .unit-switch a, .unit-switch span{
+    flex:0 0 auto;
+    padding:6px 12px;
+    border-radius:14px;
+    font-size:12px;
+    font-weight:700;
+    text-decoration:none;
+    color:var(--ink);
+    background:#f2ede7;
+    white-space:nowrap;
+  }
+  .unit-switch a.home{background:var(--blue-light);color:var(--blue);}
+  .unit-switch a.current{background:var(--pink);color:#fff;}
+  .unit-switch span.disabled{opacity:.4;}
 </style>
 </head>
 <body>
+
+<div class="unit-switch" id="unitSwitch"></div>
 
 <header class="hero">
   <div class="unit-badge">Unit<br>1</div>
@@ -342,6 +409,22 @@
 </main>
 
 <script>
+/* ---------------- UNIT SWITCHER ----------------
+   Maintain this whenever a new unit is uploaded:
+   - add its number to READY_UNITS once its unitN/index.html exists
+   - update CURRENT_UNIT on each unit's own page to that unit's number */
+const ALL_UNITS = [1,2,3,4,5,6,7,8,9,10];
+const READY_UNITS = [1];
+const CURRENT_UNIT = 1;
+
+document.getElementById('unitSwitch').innerHTML =
+  `<a class="home" href="../">🏠 首頁</a>` +
+  ALL_UNITS.map(n=>{
+    if(n === CURRENT_UNIT) return `<a class="current" href="../unit${n}/">Unit ${n}</a>`;
+    if(READY_UNITS.includes(n)) return `<a href="../unit${n}/">Unit ${n}</a>`;
+    return `<span class="disabled">Unit ${n}</span>`;
+  }).join('');
+
 /* ---------------- DATA ---------------- */
 
 const conversation = [
@@ -496,7 +579,8 @@ function speak(text, btn){
     alert('您的瀏覽器不支援語音朗讀功能');
     return;
   }
-  window.speechSynthesis.cancel();
+  const synth = window.speechSynthesis;
+  synth.cancel();
   if(currentBtn) currentBtn.classList.remove('playing');
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = 'en-US';
@@ -507,12 +591,36 @@ function speak(text, btn){
     utter.onend = () => btn.classList.remove('playing');
     utter.onerror = () => btn.classList.remove('playing');
   }
-  window.speechSynthesis.speak(utter);
+  // Chrome sometimes silently drops an utterance if speak() is called
+  // in the same tick as cancel(); a tiny delay makes playback reliable.
+  setTimeout(() => synth.speak(utter), 40);
 }
 
+// Sentences/words are stored here and referenced by index from the button's
+// data-speak-id attribute, instead of being written into an onclick='...'
+// attribute. This avoids breaking on sentences containing apostrophes
+// (e.g. "Don't", "Let's", "I've") which previously terminated the
+// single-quoted attribute early and silently broke that button.
+const speakRegistry = [];
 function spkBtn(text){
-  return `<button class="spk" onclick='speak(${JSON.stringify(text)}, this)' aria-label="播放發音">🔊</button>`;
+  const id = speakRegistry.length;
+  speakRegistry.push(text);
+  return `<button class="spk" data-speak-id="${id}" aria-label="播放發音">🔊</button>`;
 }
+
+document.addEventListener('click', e=>{
+  const btn = e.target.closest('button.spk');
+  if(btn){
+    const t = speakRegistry[Number(btn.dataset.speakId)];
+    if(t !== undefined) speak(t, btn);
+    return;
+  }
+  const chip = e.target.closest('.chip[data-speak-id]');
+  if(chip){
+    const t = speakRegistry[Number(chip.dataset.speakId)];
+    if(t !== undefined) speak(t, null);
+  }
+});
 
 function withHighlights(text, hl){
   if(!hl || !hl.length) return text;
@@ -584,7 +692,11 @@ function renderSub(sub){
   return `
     <h4>${sub.label}</h4>
     <div class="chip-row">
-      ${sub.chips.map(c => `<div class="chip" onclick='speak(${JSON.stringify(c[0])}, null)'>${c[0]}<br><span style="font-size:11px;color:#888;">${c[1]}</span></div>`).join('')}
+      ${sub.chips.map(c => {
+        const id = speakRegistry.length;
+        speakRegistry.push(c[0]);
+        return `<div class="chip" data-speak-id="${id}">${c[0]}<br><span style="font-size:11px;color:#888;">${c[1]}</span></div>`;
+      }).join('')}
     </div>
     <div class="template">${sub.template}<br><span style="color:#999;">${sub.template_zh}</span></div>
   `;
