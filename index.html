@@ -6,12 +6,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#ec5f7a">
-<title>英文會話練習 - 單元選單</title>
+<title>Unit 2 Go to a Hotel 旅館 - 互動練習</title>
 <style>
   :root{
     --pink:#ec5f7a;
     --pink-light:#fbdbe0;
     --blue:#2f7fd1;
+    --blue-light:#dcecfb;
+    --yellow:#fff2a8;
+    --purple:#8f6fc9;
+    --teal:#3aa9a0;
     --ink:#2c2c34;
     --bg:#faf7f2;
     --card:#ffffff;
@@ -23,105 +27,733 @@
     font-family:"Noto Sans TC","Segoe UI",Helvetica,Arial,sans-serif;
     background:var(--bg);
     color:var(--ink);
-    padding-bottom:40px;
+    padding-bottom:60px;
   }
   header.hero{
     background:linear-gradient(135deg,var(--pink),#f7929f);
     color:#fff;
-    padding:34px 16px 44px;
+    padding:22px 16px 60px;
     text-align:center;
+    position:relative;
     border-radius:0 0 30px 30px;
   }
-  header.hero h1{margin:0 0 4px;font-size:24px;}
-  header.hero p{margin:0;font-size:13px;opacity:.9;}
+  header.hero .unit-badge{
+    display:inline-block;
+    background:#fff;
+    color:var(--pink);
+    font-weight:800;
+    border-radius:50%;
+    width:56px;height:56px;
+    line-height:56px;
+    font-size:12px;
+    margin-bottom:8px;
+  }
+  header.hero h1{
+    margin:4px 0 0;
+    font-size:26px;
+  }
+  nav.tabs{
+    position:sticky;
+    top:42px;
+    z-index:50;
+    display:flex;
+    overflow-x:auto;
+    gap:6px;
+    background:var(--bg);
+    padding:10px 10px 6px;
+    margin-top:-40px;
+    max-width:900px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  nav.tabs button{
+    flex:0 0 auto;
+    border:none;
+    background:#fff;
+    color:var(--ink);
+    padding:10px 16px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+    white-space:nowrap;
+  }
+  nav.tabs button.active{
+    background:var(--pink);
+    color:#fff;
+  }
   main{
-    max-width:720px;
-    margin:-24px auto 0;
-    padding:0 16px;
+    max-width:900px;
+    margin:0 auto;
+    padding:10px 14px 40px;
   }
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-    gap:12px;
+  section.page{
+    display:none;
   }
-  a.unit-card, div.unit-card{
+  section.page.active{
+    display:block;
+  }
+  .section-title{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--purple);
+    color:#fff;
+    padding:6px 16px;
+    border-radius:16px;
+    font-weight:700;
+    font-size:14px;
+    margin:18px 0 12px;
+  }
+  .section-title.pink{background:var(--pink);}
+  .section-title.blue{background:var(--blue);}
+  .section-title.teal{background:var(--teal);}
+  .card{
     background:var(--card);
     border:1px solid var(--border);
     border-radius:16px;
-    padding:18px 12px;
-    text-align:center;
-    text-decoration:none;
-    color:var(--ink);
-    box-shadow:0 4px 14px rgba(0,0,0,0.05);
-    display:block;
-    transition:transform .1s;
+    padding:16px;
+    margin-bottom:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.03);
   }
-  a.unit-card:active{transform:scale(.97);}
-  .unit-card .num{
-    width:44px;height:44px;
-    line-height:44px;
+  .line{
+    display:flex;
+    gap:10px;
+    margin-bottom:14px;
+    align-items:flex-start;
+  }
+  .line:last-child{margin-bottom:0;}
+  .speaker-tag{
+    flex:0 0 30px;
+    height:30px;
+    width:30px;
     border-radius:50%;
-    background:var(--pink);
     color:#fff;
     font-weight:800;
-    margin:0 auto 10px;
-    font-size:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
   }
-  .unit-card .title{font-weight:700;font-size:14px;}
-  .unit-card .topic{font-size:12px;color:#888;margin-top:2px;}
-  div.unit-card{
-    opacity:.45;
-    cursor:default;
+  .speaker-tag.A{background:var(--blue);}
+  .speaker-tag.B{background:var(--pink);}
+  .line-content{flex:1;}
+  .en-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
   }
-  div.unit-card .num{background:#bbb;}
-  div.unit-card .topic{color:#aaa;}
-  p.note{
+  .en-text{
+    font-size:16px;
+    line-height:1.5;
+  }
+  .zh-text{
+    color:#777;
+    font-size:14px;
+    margin-top:3px;
+  }
+  .highlight{
+    background:var(--yellow);
+    padding:0 2px;
+    border-radius:3px;
+  }
+  button.spk{
+    border:none;
+    background:var(--blue-light);
+    color:var(--blue);
+    width:28px;height:28px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:14px;
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform .1s;
+  }
+  button.spk:hover{transform:scale(1.1);}
+  button.spk.playing{background:var(--pink);color:#fff;}
+  .sentence-row{
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+    padding:10px 0;
+    border-bottom:1px dashed var(--border);
+  }
+  .sentence-row:last-child{border-bottom:none;}
+  .sub-box{
+    background:var(--blue-light);
+    border-radius:14px;
+    padding:14px;
+    margin-top:10px;
+  }
+  .sub-box h4{margin:0 0 10px;color:var(--blue);font-size:14px;}
+  .chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+  .chip{
+    background:#fff;
+    border:1px solid var(--blue);
+    color:var(--blue);
+    border-radius:10px;
+    padding:8px 10px;
+    font-size:13px;
     text-align:center;
-    color:#999;
-    font-size:12px;
-    margin-top:28px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:4px;
   }
+  .template{font-size:14px;color:#555;}
+  .vocab-cat-title{
+    font-weight:800;
+    color:var(--pink);
+    font-size:16px;
+    margin:20px 0 10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .vocab-cat-title .num{
+    background:var(--pink);
+    color:#fff;
+    width:24px;height:24px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+  }
+  .vocab-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:8px;
+  }
+  .vocab-item{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+  }
+  .vocab-word-block .word{font-weight:700;}
+  .vocab-word-block .ipa{color:#999;font-size:12px;margin-left:4px;}
+  .vocab-word-block .zh{color:#555;font-size:13px;}
+  .qa-card{
+    background:linear-gradient(135deg,#fdeef1,#fff);
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:12px;
+    border:1px solid var(--pink-light);
+  }
+  .qa-label{color:var(--pink);font-weight:800;font-size:13px;margin-bottom:6px;}
+  .idiom-card{
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:12px;
+    background:#fff;
+    border:1px solid var(--border);
+  }
+  .idiom-phrase{
+    font-weight:800;
+    color:var(--purple);
+    font-size:16px;
+  }
+  .idiom-zh{
+    display:inline-block;
+    background:var(--purple);
+    color:#fff;
+    font-size:12px;
+    padding:2px 8px;
+    border-radius:10px;
+    margin-left:8px;
+  }
+  .addvocab-item{margin-bottom:12px;}
+  .addvocab-head{display:flex;align-items:center;gap:6px;font-weight:700;}
+  .pos{color:#999;font-size:12px;font-weight:400;}
+  .voice-note{
+    font-size:12px;
+    color:#999;
+    text-align:center;
+    margin:20px 0 0;
+  }
+
+  /* ---------- Responsive: tablets ---------- */
+  @media (max-width:768px){
+    main{padding:10px 12px 40px;}
+    .vocab-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+  }
+
+  /* ---------- Responsive: phones ---------- */
+  @media (max-width:480px){
+    header.hero{padding:18px 12px 54px;}
+    header.hero h1{font-size:21px;}
+    header.hero .unit-badge{width:46px;height:46px;line-height:46px;font-size:11px;}
+    nav.tabs{margin-top:-34px;padding:8px 8px 6px;gap:5px;}
+    nav.tabs button{padding:8px 12px;font-size:13px;}
+    main{padding:8px 10px 32px;}
+    .section-title{font-size:13px;padding:5px 13px;margin:14px 0 10px;}
+    .card{padding:12px;border-radius:14px;}
+    .en-text{font-size:14.5px;}
+    .zh-text{font-size:13px;}
+    .line{gap:8px;}
+    .speaker-tag{width:26px;height:26px;font-size:12px;flex-basis:26px;}
+    button.spk{width:32px;height:32px;font-size:15px;}
+    .vocab-grid{grid-template-columns:1fr 1fr;gap:6px;}
+    .vocab-item{padding:8px 10px;}
+    .vocab-word-block .word{font-size:14px;}
+    .qa-card,.idiom-card{padding:12px;}
+    .idiom-phrase{font-size:14.5px;}
+    .idiom-zh{font-size:11px;}
+    .chip{font-size:12px;padding:7px 8px;}
+    .sub-box{padding:12px;}
+  }
+
+  @media (max-width:360px){
+    .vocab-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- Unit switcher bar ---------- */
+  .unit-switch{
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    padding:10px 12px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    position:sticky;
+    top:0;
+    z-index:60;
+  }
+  .unit-switch a, .unit-switch span{
+    flex:0 0 auto;
+    padding:6px 12px;
+    border-radius:14px;
+    font-size:12px;
+    font-weight:700;
+    text-decoration:none;
+    color:var(--ink);
+    background:#f2ede7;
+    white-space:nowrap;
+  }
+  .unit-switch a.home{background:var(--blue-light);color:var(--blue);}
+  .unit-switch a.current{background:var(--pink);color:#fff;}
+  .unit-switch span.disabled{opacity:.4;}
 </style>
 </head>
 <body>
 
+<div class="unit-switch" id="unitSwitch"></div>
+
 <header class="hero">
-  <h1>英文會話練習</h1>
-  <p>7天就能用英文行遍全世界 · 點選單元開始練習</p>
+  <div class="unit-badge">Unit<br>2</div>
+  <h1>Go to a Hotel 旅館</h1>
 </header>
 
+<nav class="tabs" id="tabs">
+  <button data-tab="conv" class="active">日常對話</button>
+  <button data-tab="sentences">超高頻率句</button>
+  <button data-tab="vocab">日常單字</button>
+  <button data-tab="qa">Q&amp;A</button>
+  <button data-tab="idioms">諺語慣用語</button>
+</nav>
+
 <main>
-  <div class="grid" id="grid"></div>
-  <p class="note">尚未建立的單元會先顯示灰色，之後上傳新單元後在下方 units 清單裡把該單元改成連結即可。</p>
+
+  <!-- ============ Daily Conversation ============ -->
+  <section class="page active" id="page-conv">
+    <span class="section-title pink">Daily Conversation 日常對話</span>
+    <div class="card" id="conv-list"></div>
+
+    <span class="section-title blue">補充單字 & 片語</span>
+    <div class="card" id="conv-addvocab"></div>
+  </section>
+
+  <!-- ============ Daily Sentences ============ -->
+  <section class="page" id="page-sentences">
+    <span class="section-title pink">Daily Sentences 超高頻率使用句</span>
+    <div class="card" id="sentence-list"></div>
+
+    <span class="section-title blue">換個單字說說看</span>
+    <div class="card">
+      <div class="sub-box" id="sub-box-1"></div>
+      <div class="sub-box" id="sub-box-2" style="margin-top:14px;"></div>
+    </div>
+
+    <span class="section-title teal">補充單字 & 片語</span>
+    <div class="card" id="sentence-addvocab"></div>
+  </section>
+
+  <!-- ============ Daily Vocabulary ============ -->
+  <section class="page" id="page-vocab">
+    <span class="section-title pink">Daily Vocabulary 語言學校都會教的超實用日常單字</span>
+    <div id="vocab-list"></div>
+  </section>
+
+  <!-- ============ Daily Q&A ============ -->
+  <section class="page" id="page-qa">
+    <span class="section-title pink">Daily Q&amp;A</span>
+    <div id="qa-list"></div>
+  </section>
+
+  <!-- ============ Proverbs & Idioms ============ -->
+  <section class="page" id="page-idioms">
+    <span class="section-title pink">Proverbs &amp; Idioms 道地諺語與慣用語</span>
+    <div id="idioms-list"></div>
+  </section>
+
+  <p class="voice-note">🔊 使用瀏覽器內建語音朗讀（Web Speech API）。若無聲音，請確認裝置音量或改用 Chrome / Safari 瀏覽器。</p>
 </main>
 
 <script>
-// 在這裡維護所有單元。ready:true 代表已經上傳，會變成可點的連結；
-// ready:false 會顯示成灰色的「敬請期待」卡片。
-// 之後新增一個單元時，只要把該單元改成 ready:true 並補上 topic 即可。
-const units = [
-  {n:1,  topic:"Go Home 家",   ready:true},
-  {n:2,  topic:"",             ready:false},
-  {n:3,  topic:"",             ready:false},
-  {n:4,  topic:"",             ready:false},
-  {n:5,  topic:"",             ready:false},
-  {n:6,  topic:"",             ready:false},
-  {n:7,  topic:"",             ready:false},
-  {n:8,  topic:"",             ready:false},
-  {n:9,  topic:"",             ready:false},
-  {n:10, topic:"",             ready:false},
+/* ---------------- UNIT SWITCHER ----------------
+   Maintain this whenever a new unit is uploaded:
+   - add its number to READY_UNITS once its unitN/index.html exists
+   - update CURRENT_UNIT on each unit's own page to that unit's number */
+const ALL_UNITS = [1,2,3,4,5,6,7,8,9,10];
+const READY_UNITS = [1,2];
+const CURRENT_UNIT = 2;
+
+document.getElementById('unitSwitch').innerHTML =
+  `<a class="home" href="../">🏠 首頁</a>` +
+  ALL_UNITS.map(n=>{
+    if(n === CURRENT_UNIT) return `<a class="current" href="../unit${n}/">Unit ${n}</a>`;
+    if(READY_UNITS.includes(n)) return `<a href="../unit${n}/">Unit ${n}</a>`;
+    return `<span class="disabled">Unit ${n}</span>`;
+  }).join('');
+
+/* ---------------- DATA ---------------- */
+
+const conversation = [
+  {sp:'A', en:"Good afternoon, welcome to Sunrise Inn. Do you have a reservation with us?", zh:"午安，歡迎來到日昇旅館。請問您有預約嗎？", hl:["reservation"]},
+  {sp:'B', en:"Hi, yes. I made a reservation through your app three days ago. My name is Olivia Chen.", zh:"嗨，有的。我三天前透過你們的APP預約了。我叫Olivia Chen。"},
+  {sp:'A', en:"Let me pull that up for you... Ah, found it! Could I see your ID or passport, please?", zh:"讓我幫您查詢一下……啊，找到了！可以請您出示身分證或護照嗎？"},
+  {sp:'B', en:"Sure, here you go.", zh:"當然，給你。"},
+  {sp:'A', en:"Perfect, everything matches. You're staying in room 512, a twin room on the fifth floor, right next to the elevator.", zh:"太好了，資料都對得上。您入住512房，五樓的雙床房，就在電梯旁邊。"},
+  {sp:'B', en:"Great. Actually, I have an early flight the day after tomorrow. Could you arrange a morning call for me?", zh:"太好了。對了，我後天要搭一班早班機，可以幫我安排晨喚服務嗎？", hl:["arrange"]},
+  {sp:'A', en:"Of course. What time would you like us to call you?", zh:"當然可以，您希望我們幾點叫您？"},
+  {sp:'B', en:"5:30 would be perfect. Thank you so much!", zh:"五點半就太完美了，非常謝謝你！"},
 ];
 
-document.getElementById('grid').innerHTML = units.map(u => {
-  const inner = `
-    <div class="num">${u.n}</div>
-    <div class="title">Unit ${u.n}</div>
-    <div class="topic">${u.ready ? u.topic : '敬請期待'}</div>
+const convAddVocab = [
+  {word:"reservation", pos:"n", zh:"預約、訂位", ex_en:"Did you make a reservation before coming here?", ex_zh:"你來之前有先預約嗎？"},
+  {word:"arrange", pos:"v", zh:"安排", ex_en:"Could you arrange a taxi for us tomorrow morning?", ex_zh:"你可以幫我們安排明天早上的計程車嗎？"},
+  {word:"morning call / wake-up call", pos:"ph", zh:"晨喚服務（兩種說法都很常用）", ex_en:"I'd like to request a wake-up call for 7 a.m.", ex_zh:"我想申請早上七點的晨喚服務。"},
+  {word:"twin room", pos:"ph", zh:"雙床房（兩張單人床，適合朋友同住）", ex_en:"We'd prefer a twin room instead of a double room.", ex_zh:"比起雙人房，我們比較想要雙床房。"},
+];
+
+const sentences = [
+  {en:"Could you keep our luggage at the front desk until check-in time?", zh:"可以先幫我們把行李寄放在櫃檯，直到可以入住嗎？", hl:["front desk"]},
+  {en:"Is breakfast included in the room rate?", zh:"房價有包含早餐嗎？", hl:["room rate"]},
+  {en:"What's the Wi-Fi password for the hotel?", zh:"這間旅館的Wi-Fi密碼是什麼？"},
+  {en:"Could I get an extra blanket for tonight?", zh:"今晚可以再給我一條額外的毯子嗎？"},
+  {en:"Excuse me, the air conditioner in my room isn't working properly.", zh:"不好意思，我房間的冷氣沒辦法正常運作。"},
+  {en:"Do you offer a shuttle service to the airport?", zh:"你們有提供到機場的接駁服務嗎？", hl:["shuttle service"]},
+  {en:"I'd like to request a late check-out, if possible.", zh:"如果可以的話，我想申請晚一點退房。", hl:["late check-out"]},
+  {en:"Can you recommend a quiet room away from the elevator?", zh:"你可以推薦一間遠離電梯、比較安靜的房間嗎？"},
+  {en:"Please hang the \"Do Not Disturb\" sign if you don't want to be disturbed.", zh:"如果不想被打擾，請掛上「請勿打擾」的牌子。", hl:["Do Not Disturb"]},
+  {en:"We'd like to exchange some cash at the front desk.", zh:"我們想在櫃檯換一些現金。"},
+];
+
+const sub1 = {
+  label:"air conditioner 可以替換：",
+  chips:[["TV","電視"],["safe","保險箱"],["minibar","迷你吧"]],
+  template:"Excuse me, the ___ in my room isn't working properly.",
+  template_zh:"不好意思，我房間的___沒辦法正常運作。"
+};
+const sub2 = {
+  label:"Wi-Fi password 可以替換：",
+  chips:[["gym opening hours","健身房營業時間"],["parking fee","停車費"],["checkout time","退房時間"]],
+  template:"What's the ___ for the hotel?",
+  template_zh:"這間旅館的___是什麼？"
+};
+
+const sentenceAddVocab = [
+  {word:"shuttle service", pos:"ph", zh:"接駁服務", ex_en:"The hotel shuttle service runs every hour.", ex_zh:"飯店的接駁車每小時發一班。"},
+  {word:"late check-out", pos:"ph", zh:"延遲退房", ex_en:"Late check-out is available for an extra fee.", ex_zh:"延遲退房需要額外付費。"},
+  {word:"Do Not Disturb", pos:"ph", zh:"請勿打擾（常見於房門掛牌）", ex_en:"She hung a Do Not Disturb sign on her door.", ex_zh:"她在房門上掛了一個請勿打擾的牌子。"},
+  {word:"exchange", pos:"v", zh:"兌換、交換", ex_en:"Can I exchange this shirt for a bigger size?", ex_zh:"我可以把這件襯衫換成大一號的嗎？"},
+];
+
+const vocabCategories = [
+  {title:"lobby", zh:"大廳", words:[
+    ["front desk","","櫃檯"],
+    ["receptionist","rɪˈsɛpʃənɪst","櫃檯接待員"],
+    ["concierge","ˌkɑnsiˈɛrʒ","禮賓部人員"],
+    ["key card","","房卡"],
+    ["elevator / lift","ˈɛlə,vetə","電梯"],
+    ["lounge","laʊndʒ","交誼廳"],
+    ["luggage cart","","行李推車"],
+  ]},
+  {title:"guest room", zh:"客房", words:[
+    ["single room","","單人房"],
+    ["double room","","雙人房（一張大床）"],
+    ["twin room","","雙床房（兩張單人床）"],
+    ["deluxe room","dɪˈlʌks","豪華房"],
+    ["suite","swit","套房"],
+    ["connecting room","","相連房（適合家庭入住）"],
+  ]},
+  {title:"in-room amenities", zh:"房內設施", words:[
+    ["air conditioner","","空調"],
+    ["safe","sef","保險箱"],
+    ["minibar","ˈmɪnɪ,bɑr","迷你吧"],
+    ["hairdryer","","吹風機"],
+    ["iron","ˈaɪərn","熨斗"],
+    ["coffee maker","","咖啡機"],
+    ["bathrobe","","浴袍"],
+  ]},
+  {title:"hotel facilities", zh:"飯店設施", words:[
+    ["swimming pool","","游泳池"],
+    ["gymnasium / gym","dʒɪmˈneziəm","健身房"],
+    ["spa","spɑ","水療中心"],
+    ["business center","","商務中心"],
+    ["rooftop bar","","頂樓酒吧"],
+    ["parking lot","","停車場"],
+    ["conference room","","會議室"],
+  ]},
+  {title:"hotel staff", zh:"飯店人員", words:[
+    ["bellboy / porter","","行李員"],
+    ["housekeeper","ˈhaʊs,kipər","房務人員"],
+    ["doorman","ˈdɔr,mæn","門房"],
+    ["manager","ˈmænɪdʒər","經理"],
+    ["valet","væˈle","泊車員"],
+  ]},
+  {title:"check-in & check-out", zh:"入住與退房", words:[
+    ["check-in time","","入住時間"],
+    ["check-out time","","退房時間"],
+    ["deposit","dɪˈpɑzɪt","訂金、押金"],
+    ["ID / passport","","身分證／護照"],
+    ["reservation number","","訂房編號"],
+    ["early check-in","","提前入住"],
+  ]},
+];
+
+const qaList = [
+  {q_en:"Does this hotel have a swimming pool?", q_zh:"這間飯店有游泳池嗎？", a_en:"Yes, it's on the rooftop, open until 10 p.m.", a_zh:"有的，在頂樓，開放到晚上十點。"},
+  {q_en:"Where can I get some ice?", q_zh:"哪裡可以拿到冰塊？", a_en:"There's an ice machine at the end of the hallway.", a_zh:"走廊底有一台製冰機。"},
+  {q_en:"Can I get a wake-up call at 6 a.m.?", q_zh:"我可以要求早上六點的晨喚服務嗎？", a_en:"Sure, I'll note that down for you right away.", a_zh:"當然可以，我馬上幫您記下來。"},
+  {q_en:"Is parking free for hotel guests?", q_zh:"房客停車是免費的嗎？", a_en:"Yes, parking is free for all guests staying with us.", a_zh:"是的，所有入住的房客都可以免費停車。"},
+];
+
+const idioms = [
+  {phrase:"roll out the red carpet", zh:"給予貴賓級的隆重款待", ex_en:"The hotel rolled out the red carpet for the visiting film crew.", ex_zh:"飯店給了來訪的拍片團隊貴賓級的款待。"},
+  {phrase:"a home away from home", zh:"賓至如歸，如同在家一般舒適", ex_en:"This little guesthouse really felt like a home away from home.", ex_zh:"這間小民宿真的讓人有賓至如歸的感覺。"},
+  {phrase:"at the drop of a hat", zh:"毫不猶豫、立刻馬上", ex_en:"The staff here are ready to help guests at the drop of a hat.", ex_zh:"這裡的員工隨時準備好立刻幫忙客人。"},
+  {phrase:"put someone up", zh:"讓某人留宿、收留", ex_en:"Could you put us up for one more night? Our flight got delayed.", ex_zh:"可以讓我們多住一晚嗎？我們的班機延誤了。"},
+  {phrase:"on the house", zh:"店家招待、免費贈送", ex_en:"Enjoy this fruit plate — it's on the house tonight.", ex_zh:"請享用這盤水果，今晚是店家招待的。"},
+  {phrase:"when in Rome, do as the Romans do", zh:"入境隨俗", ex_en:"When in Rome, do as the Romans do — try the local breakfast instead of ordering room service.", ex_zh:"入境隨俗，不如試試當地早餐，別只叫客房服務。"},
+];
+
+/* ---------------- SPEECH ---------------- */
+
+let currentBtn = null;
+function speak(text, btn){
+  if(!('speechSynthesis' in window)){
+    alert('您的瀏覽器不支援語音朗讀功能');
+    return;
+  }
+  const synth = window.speechSynthesis;
+  synth.cancel();
+  if(currentBtn) currentBtn.classList.remove('playing');
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = 0.92;
+  if(btn){
+    btn.classList.add('playing');
+    currentBtn = btn;
+    utter.onend = () => btn.classList.remove('playing');
+    utter.onerror = () => btn.classList.remove('playing');
+  }
+  // Chrome sometimes silently drops an utterance if speak() is called
+  // in the same tick as cancel(); a tiny delay makes playback reliable.
+  setTimeout(() => synth.speak(utter), 40);
+}
+
+// Sentences/words are stored here and referenced by index from the button's
+// data-speak-id attribute, instead of being written into an onclick='...'
+// attribute. This avoids breaking on sentences containing apostrophes
+// (e.g. "Don't", "Let's", "I've") which previously terminated the
+// single-quoted attribute early and silently broke that button.
+const speakRegistry = [];
+function spkBtn(text){
+  const id = speakRegistry.length;
+  speakRegistry.push(text);
+  return `<button class="spk" data-speak-id="${id}" aria-label="播放發音">🔊</button>`;
+}
+
+document.addEventListener('click', e=>{
+  const btn = e.target.closest('button.spk');
+  if(btn){
+    const t = speakRegistry[Number(btn.dataset.speakId)];
+    if(t !== undefined) speak(t, btn);
+    return;
+  }
+  const chip = e.target.closest('.chip[data-speak-id]');
+  if(chip){
+    const t = speakRegistry[Number(chip.dataset.speakId)];
+    if(t !== undefined) speak(t, null);
+  }
+});
+
+function withHighlights(text, hl){
+  if(!hl || !hl.length) return text;
+  let out = text;
+  hl.forEach(h=>{
+    out = out.replace(h, `<span class="highlight">${h}</span>`);
+  });
+  return out;
+}
+
+/* ---------------- RENDER ---------------- */
+
+function renderConversation(){
+  const el = document.getElementById('conv-list');
+  el.innerHTML = conversation.map(l => `
+    <div class="line">
+      <div class="speaker-tag ${l.sp}">${l.sp}</div>
+      <div class="line-content">
+        <div class="en-row">
+          <span class="en-text">${withHighlights(l.en, l.hl)}</span>
+          ${spkBtn(l.en)}
+        </div>
+        <div class="zh-text">${l.zh}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('conv-addvocab').innerHTML = renderAddVocab(convAddVocab);
+}
+
+function renderAddVocab(list){
+  return list.map(v => `
+    <div class="addvocab-item">
+      <div class="addvocab-head">
+        <span>${v.word}</span><span class="pos">(${v.pos})</span>
+        <span class="zh-text" style="margin:0;">${v.zh}</span>
+        ${spkBtn(v.word)}
+      </div>
+      <div class="sentence-row" style="border:none;padding-top:4px;">
+        <div style="flex:1;">
+          <div class="en-text" style="font-size:14px;">${v.ex_en}</div>
+          <div class="zh-text">${v.ex_zh}</div>
+        </div>
+        ${spkBtn(v.ex_en)}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderSentences(){
+  const el = document.getElementById('sentence-list');
+  el.innerHTML = sentences.map(s => `
+    <div class="sentence-row">
+      <div style="flex:1;">
+        <div class="en-text">${withHighlights(s.en, s.hl)}</div>
+        <div class="zh-text">${s.zh}</div>
+      </div>
+      ${spkBtn(s.en)}
+    </div>
+  `).join('');
+
+  document.getElementById('sub-box-1').innerHTML = renderSub(sub1);
+  document.getElementById('sub-box-2').innerHTML = renderSub(sub2);
+
+  document.getElementById('sentence-addvocab').innerHTML = renderAddVocab(sentenceAddVocab);
+}
+
+function renderSub(sub){
+  return `
+    <h4>${sub.label}</h4>
+    <div class="chip-row">
+      ${sub.chips.map(c => {
+        const id = speakRegistry.length;
+        speakRegistry.push(c[0]);
+        return `<div class="chip" data-speak-id="${id}">${c[0]}<br><span style="font-size:11px;color:#888;">${c[1]}</span></div>`;
+      }).join('')}
+    </div>
+    <div class="template">${sub.template}<br><span style="color:#999;">${sub.template_zh}</span></div>
   `;
-  return u.ready
-    ? `<a class="unit-card" href="unit${u.n}/">${inner}</a>`
-    : `<div class="unit-card">${inner}</div>`;
-}).join('');
+}
+
+function renderVocab(){
+  const el = document.getElementById('vocab-list');
+  el.innerHTML = vocabCategories.map((cat, i) => `
+    <div class="vocab-cat-title"><span class="num">${i+1}</span>${cat.title} ${cat.zh}</div>
+    <div class="vocab-grid">
+      ${cat.words.map(w => `
+        <div class="vocab-item">
+          <div class="vocab-word-block">
+            <span class="word">${w[0]}</span>
+            ${w[1] ? `<span class="ipa">[${w[1]}]</span>` : ''}
+            <div class="zh">${w[2]}</div>
+          </div>
+          ${spkBtn(w[0].split(' / ')[0].split(' ')[0] === w[0] ? w[0] : w[0])}
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function renderQA(){
+  const el = document.getElementById('qa-list');
+  el.innerHTML = qaList.map((qa, i) => `
+    <div class="qa-card">
+      <div class="qa-label">會話${['一','二','三','四','五'][i] || (i+1)}</div>
+      <div class="en-row">
+        <span class="en-text"><b>Q</b>&nbsp;${qa.q_en}</span>
+        ${spkBtn(qa.q_en)}
+      </div>
+      <div class="zh-text" style="margin-bottom:8px;">${qa.q_zh}</div>
+      <div class="en-row">
+        <span class="en-text" style="color:var(--pink);"><b>A</b>&nbsp;${qa.a_en}</span>
+        ${spkBtn(qa.a_en)}
+      </div>
+      <div class="zh-text">${qa.a_zh}</div>
+    </div>
+  `).join('');
+}
+
+function renderIdioms(){
+  const el = document.getElementById('idioms-list');
+  el.innerHTML = idioms.map(id => `
+    <div class="idiom-card">
+      <div class="en-row">
+        <span class="idiom-phrase">${id.phrase}</span>
+        <span class="idiom-zh">${id.zh}</span>
+        ${spkBtn(id.phrase)}
+      </div>
+      <div class="sentence-row" style="border:none;padding-top:8px;">
+        <div style="flex:1;">
+          <div class="en-text" style="font-size:14px;">${withHighlights(id.ex_en,[id.phrase])}</div>
+          <div class="zh-text">${id.ex_zh}</div>
+        </div>
+        ${spkBtn(id.ex_en)}
+      </div>
+    </div>
+  `).join('');
+}
+
+renderConversation();
+renderSentences();
+renderVocab();
+renderQA();
+renderIdioms();
+
+/* ---------------- TABS ---------------- */
+
+document.getElementById('tabs').addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  window.speechSynthesis.cancel();
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('section.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-' + btn.dataset.tab).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+});
 </script>
 
 </body>
